@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_app/features/grocery/presentation/pages/grocery_details.dart';
-
 import '../../domain/entity/grocery.dart';
 import '../Bloc/grocery/grocery_bloc.dart';
 import '../Bloc/grocery/grocery_state.dart';
@@ -14,15 +13,14 @@ class GroceryPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.center, // Center the title content
           children: [
-            Icon(Icons.shopping_cart, color: Colors.orange),
+            Icon(Icons.fastfood, color: Colors.orange),
             SizedBox(width: 8),
             Text(
               "Burger",
               style: TextStyle(color: Colors.black),
             ),
-            Spacer(),
-            Icon(Icons.settings, color: Colors.black),
           ],
         ),
         elevation: 0,
@@ -41,11 +39,9 @@ class GroceryPage extends StatelessWidget {
                 ),
                 filled: true,
                 fillColor: Colors.grey[200],
+                suffixIcon: Icon(Icons.filter_list), // Keep filter icon on the search bar
               ),
             ),
-
-
-            
             SizedBox(height: 16),
             Expanded(
               child: BlocBuilder<HomePageBloc, HomePageState>(
@@ -81,14 +77,22 @@ class GroceryPage extends StatelessWidget {
   }
 }
 
-
-class GroceryCard extends StatelessWidget {
+class GroceryCard extends StatefulWidget {
   final Grocery grocery;
 
   const GroceryCard({Key? key, required this.grocery}) : super(key: key);
 
   @override
+  _GroceryCardState createState() => _GroceryCardState();
+}
+
+class _GroceryCardState extends State<GroceryCard> {
+  bool isFavorite = false;
+
+  @override
   Widget build(BuildContext context) {
+    final grocery = widget.grocery;
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -109,7 +113,7 @@ class GroceryCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center, // Center text and icons
           children: [
             Stack(
               children: [
@@ -120,26 +124,39 @@ class GroceryCard extends StatelessWidget {
                 Positioned(
                   top: 8,
                   right: 8,
-                  child: Icon(Icons.favorite, color: Colors.red),
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isFavorite = !isFavorite;
+                      });
+                    },
+                    child: Icon(
+                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                      color: isFavorite ? Colors.red : Colors.grey,
+                    ),
+                  ),
                 ),
               ],
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center, // Center text and icons
                 children: [
-                  Text(grocery.title, style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(grocery.title, style: TextStyle(fontWeight: FontWeight.bold), textAlign: TextAlign.center),
                   SizedBox(height: 4),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center, // Center the row content
                     children: [
                       Icon(Icons.star, color: Colors.orange, size: 16),
+                      SizedBox(width: 4),
                       Text(grocery.rating.toString(), style: TextStyle(color: Colors.black)),
                     ],
                   ),
                   SizedBox(height: 4),
                   if (grocery.isDiscounted)
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center, // Center the row content
                       children: [
                         Text(
                           '£${grocery.price.toStringAsFixed(2)}',
