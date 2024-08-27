@@ -1,43 +1,33 @@
-// lib/features/grocery/presentation/bloc/grocery_state.dart
+
 
 import 'package:equatable/equatable.dart';
-import '../../../domain/entity/grocery.dart';
+import 'package:my_app/features/grocery/domain/entity/grocery.dart';
 
-
-abstract class GroceryState extends Equatable {
-  const GroceryState();
-
+sealed class HomePageState extends Equatable {
+  const HomePageState();
+  
   @override
-  List<Object?> get props => [];
+  List<Object> get props => [];
 }
 
-class GroceryInitial extends GroceryState {}
+final class HomePageInitialState extends HomePageState {}
 
-class GroceryLoading extends GroceryState {}
+final class HomePageLoadingState extends HomePageState {}
 
-class GroceryLoaded extends GroceryState {
+final class HomePageLoadedState extends HomePageState {
   final List<Grocery> groceries;
 
-  const GroceryLoaded(this.groceries);
+  const HomePageLoadedState(this.groceries);
 
   @override
-  List<Object?> get props => [groceries];
+  List<Object> get props => [groceries];
 }
 
-class GroceryDetailLoaded extends GroceryState {
-  final Grocery grocery;
-
-  const GroceryDetailLoaded(this.grocery);
-
-  @override
-  List<Object?> get props => [grocery];
-}
-
-class GroceryFailure extends GroceryState {
+final class HomePageErrorState extends HomePageState {
   final String message;
 
-  const GroceryFailure(this.message);
+  const HomePageErrorState(this.message);
 
   @override
-  List<Object?> get props => [message];
+  List<Object> get props => [message];
 }

@@ -1,20 +1,25 @@
 
+
 import 'package:equatable/equatable.dart';
+import 'package:my_app/features/grocery/domain/entity/grocery.dart';
 
-abstract class GroceryEvent extends Equatable {
-  const GroceryEvent();
-
-  @override
-  List<Object?> get props => [];
-}
-
-class FetchAllGroceries extends GroceryEvent {}
-
-class FetchGroceryDetails extends GroceryEvent {
-  final String id;
-
-  const FetchGroceryDetails(this.id);
+sealed class HomePageEvent extends Equatable {
+  const HomePageEvent();
 
   @override
-  List<Object?> get props => [id];
+  List<Object> get props => [Grocery];
 }
+
+class FetchAllProductsEvent extends HomePageEvent {}
+
+
+
+
+// class FetchGroceryDetailsEvent extends GroceryEvent {
+//   final String id;
+
+//   const FetchGroceryDetailsEvent(this.id);
+
+//   @override
+//   List<Object> get props => [id];
+// }

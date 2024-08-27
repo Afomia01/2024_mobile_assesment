@@ -1,8 +1,7 @@
 import '../../domain/entity/grocery.dart';
-import 'option_model.dart';
 
 class GroceryModel extends Grocery {
-  const GroceryModel({
+   GroceryModel({
     required super.id,
     required super.title,
     required super.imageUrl,
@@ -15,18 +14,17 @@ class GroceryModel extends Grocery {
 
   factory GroceryModel.fromJson(Map<String, dynamic> json) {
     final optionsList = (json['options'] as List<dynamic>?)
-            ?.map((option) => OptionModel.fromJson(option as Map<String, dynamic>))
-            .toList() ??
-        [];
+        ?.map((option) => OptionModel.fromJson(option as Map<String, dynamic>))
+        .toList() ?? [];
 
     return GroceryModel(
-      id: json['id'],
-      title: json['title'],
-      imageUrl: json['imageUrl'],
-      rating: (json['rating'] as num).toDouble(),
-      price: (json['price'] as num).toDouble(),
-      discount: (json['discount'] as num).toDouble(),
-      description: json['description'],
+      id: json['id'] as String,
+      title: json['title'] as String,
+      imageUrl: json['imageUrl'] as String,
+      rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
+      price: (json['price'] as num?)?.toDouble() ?? 0.0,
+      discount: (json['discount'] as num?)?.toDouble() ?? 0.0,
+      description: json['description'] as String,
       options: optionsList,
     );
   }
@@ -40,30 +38,60 @@ class GroceryModel extends Grocery {
       'price': price,
       'discount': discount,
       'description': description,
-      'options': options.map((option) => (option as OptionModel).toJson()).toList(),
+      'options': options.map((option) => OptionModel.fromOption(option).toJson()).toList(),
     };
   }
 
-  // Add the copyWith method
-  GroceryModel copyWith({
-    String? id,
-    String? title,
-    String? imageUrl,
-    double? rating,
-    double? price,
-    double? discount,
-    String? description,
-    List<OptionModel>? options,
-  }) {
-    return GroceryModel(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      imageUrl: imageUrl ?? this.imageUrl,
-      rating: rating ?? this.rating,
-      price: price ?? this.price,
-      discount: discount ?? this.discount,
-      description: description ?? this.description,
-      options: options ?? this.options,
+  Grocery toEntity() {
+    return Grocery(
+      id: id,
+      title: title,
+      imageUrl: imageUrl,
+      rating: rating,
+      price: price,
+      discount: discount,
+      description: description,
+      options: options.toList(),
+    );
+  }
+}
+
+class OptionModel extends Option {
+   OptionModel({
+    required super.id,
+    required super.name,
+    required super.price,
+  });
+
+  factory OptionModel.fromJson(Map<String, dynamic> json) {
+    return OptionModel(
+      id: json['id'] as String,
+      name: json['name'] as String,
+      price: (json['price'] as num?)?.toDouble() ?? 0.0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'price': price,
+    };
+  }
+
+  Option toEntity() {
+    return Option(
+      id: id,
+      name: name,
+      price: price,
+    );
+  }
+
+  static OptionModel fromOption(Option option) {
+    return OptionModel(
+      id: option.id,
+      name: option.name,
+      price: option.price,
     );
   }
 }

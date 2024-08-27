@@ -5,11 +5,11 @@ import '../../domain/entity/grocery.dart';
 import '../Bloc/grocery/grocery_bloc.dart';
 import '../Bloc/grocery/grocery_state.dart';
 
-
 class GroceryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Ensure this widget is within the BlocProvider context
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Row(
@@ -17,7 +17,7 @@ class GroceryPage extends StatelessWidget {
             Icon(Icons.shopping_cart, color: Colors.orange),
             SizedBox(width: 8),
             Text(
-              "Groceries",
+              "Burger",
               style: TextStyle(color: Colors.black),
             ),
             Spacer(),
@@ -44,11 +44,11 @@ class GroceryPage extends StatelessWidget {
             ),
             SizedBox(height: 16),
             Expanded(
-              child: BlocBuilder<GroceryBloc, GroceryState>(
+              child: BlocBuilder<HomePageBloc, HomePageState>(
                 builder: (context, state) {
-                  if (state is GroceryLoading) {
+                  if (state is HomePageLoadingState) {
                     return Center(child: CircularProgressIndicator());
-                  } else if (state is GroceryLoaded) {
+                  } else if (state is HomePageLoadedState) {
                     return GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
@@ -62,10 +62,9 @@ class GroceryPage extends StatelessWidget {
                         return GroceryCard(grocery: grocery);
                       },
                     );
-                  } else if (state is GroceryFailure) {
+                  } else if (state is HomePageErrorState) {
                     return Center(child: Text(state.message));
                   } else {
-                    // Display nothing or a default message when the state is neither loading, success, nor failure.
                     return Center(child: Text("No groceries available."));
                   }
                 },
@@ -78,6 +77,7 @@ class GroceryPage extends StatelessWidget {
   }
 }
 
+
 class GroceryCard extends StatelessWidget {
   final Grocery grocery;
 
@@ -88,7 +88,7 @@ class GroceryCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
-          color: Colors.blue,
+          color: Colors.white,
           width: 2,
         ),
         borderRadius: BorderRadius.circular(10),
@@ -100,7 +100,7 @@ class GroceryCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-                child: Image.network(grocery.imageUrl, fit: BoxFit.cover, height: 100, width: double.infinity),
+                child: Image.network(grocery.imageUrl, fit: BoxFit.cover, height: 80, width: double.infinity),
               ),
               Positioned(
                 top: 8,

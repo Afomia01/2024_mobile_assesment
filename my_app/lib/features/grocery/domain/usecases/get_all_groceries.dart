@@ -1,5 +1,3 @@
-// lib/features/grocery/domain/usecases/get_all_groceries.dart
-
 import 'package:dartz/dartz.dart';
 import '../../../../core/error/failure.dart';
 import '../entity/grocery.dart';
@@ -10,7 +8,7 @@ class GetAllGroceries {
 
   GetAllGroceries(this.repository);
 
-  Future<Either<Failure, List<Grocery>>> call() {
-    return repository.getAllGroceries();
+  Future<Either<Failure, List<Grocery>>> call() async {
+    return await repository.getAllGroceries();
   }
 }

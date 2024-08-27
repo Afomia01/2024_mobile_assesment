@@ -1,6 +1,6 @@
-//check if it requires equitable and we have to compare anything later.
 import 'package:equatable/equatable.dart';
-import 'package:my_app/features/grocery/domain/entity/option.dart';
+
+// lib/features/grocery/domain/entity/grocery.dart
 
 class Grocery extends Equatable {
   final String id;
@@ -12,8 +12,8 @@ class Grocery extends Equatable {
   final String description;
   final List<Option> options;
 
-  const Grocery({
-    required this.id, 
+  Grocery({
+    required this.id,
     required this.title,
     required this.imageUrl,
     required this.rating,
@@ -23,10 +23,7 @@ class Grocery extends Equatable {
     required this.options,
   });
 
-  @override
-  List<Object?> get props => [id, title, imageUrl, rating, price, discount, description, options];
-
-double get discountedPrice {
+  double get discountedPrice {
     return price - (price * discount / 100);
   }
 
@@ -34,5 +31,31 @@ double get discountedPrice {
   bool get isDiscounted {
     return discount > 0;
   }
+
+  @override
+  List<Object?> get props => [
+        id,
+        title,
+        imageUrl,
+        rating,
+        price,
+        discount,
+        description,
+        options,
+      ];
 }
 
+class Option extends Equatable {
+  final String id;
+  final String name;
+  final double price;
+
+  Option({
+    required this.id,
+    required this.name,
+    required this.price,
+  });
+
+  @override
+  List<Object?> get props => [id, name, price];
+}

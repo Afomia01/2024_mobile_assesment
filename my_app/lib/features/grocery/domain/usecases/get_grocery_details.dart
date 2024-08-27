@@ -1,27 +1,41 @@
 import 'package:dartz/dartz.dart';
-import 'package:equatable/equatable.dart';
+import 'package:my_app/core/error/failure.dart';
 import 'package:my_app/features/grocery/domain/entity/grocery.dart';
 
-import '../../../../core/error/failure.dart';
-import '../../../../core/usecase.dart';
 import '../repository/grocery_repository.dart';
 
-class GetGroceryDetails implements UseCase<Grocery, GetGroceryDetailsParams> {
+class GetGroceryDetails {
   final GroceryRepository repository;
 
   GetGroceryDetails(this.repository);
 
-  @override
-  Future<Either<Failure, Grocery>> call(GetGroceryDetailsParams params) async {
-    return await repository.getGroceryDetails(params.id);
+  Future<Either<Failure, Grocery>> call(String id) async {
+    return await repository.getGroceryDetails(id);
   }
 }
 
-class GetGroceryDetailsParams extends Equatable {
-  final String id;
+// import 'package:dartz/dartz.dart';
+// import 'package:equatable/equatable.dart';
+// import 'package:my_app/features/grocery/domain/entity/grocery.dart';
 
-  const GetGroceryDetailsParams(this.id);
+// import '../../../../core/error/failure.dart';
+// import '../repository/grocery_repository.dart';
 
-  @override
-  List<Object?> get props => [id];
-}
+// class GetGroceryDetails {
+//   final GroceryRepository repository;
+
+//   GetGroceryDetails(this.repository);
+
+//   Future<Either<Failure, Grocery>> call(String id) async {
+//     return await repository.getGroceryDetails(id);
+//   }
+// }
+
+// class GetGroceryDetailsParams extends Equatable {
+//   final String id;
+
+//   const GetGroceryDetailsParams(this.id);
+
+//   @override
+//   List<Object?> get props => [id];
+// }

@@ -1,14 +1,14 @@
 import 'package:dartz/dartz.dart';
-import '../../../../core/error/excetpion.dart';
+import 'package:my_app/core/error/excetpion.dart';
 import '../../../../core/error/failure.dart';
 import '../../../../core/network/network_info.dart';
 import '../../domain/entity/grocery.dart';
 import '../../domain/repository/grocery_repository.dart';
 import '../datasource/local/grocery_local_data_source.dart';
 import '../datasource/remote/grocery_remote_data_source.dart';
-import '../models/grocery_mapper.dart';
+import '../models/grocery_model.dart';  // Ensure you import GroceryModel
 
-class GroceryRepositoryImpl extends GroceryRepository {
+class GroceryRepositoryImpl implements GroceryRepository {
   final GroceryRemoteDataSource _groceryRemoteDataSource;
   final GroceryLocalDataSource _groceryLocalDataSource;
   final NetworkInfo _networkInfo;
@@ -25,16 +25,18 @@ class GroceryRepositoryImpl extends GroceryRepository {
   Future<Either<Failure, List<Grocery>>> getAllGroceries() async {
     if (await _networkInfo.isConnected) {
       try {
-        final groceries = await _groceryRemoteDataSource.getGroceries();
-        _groceryLocalDataSource.cacheGroceries(groceries);
-        return Right(groceries.map((model) => model.toEntity()).toList());
+        final groceryModels = await _groceryRemoteDataSource.getGroceries();
+        _groceryLocalDataSource.cacheGroceries(groceryModels);
+        final groceries = groceryModels.map((model) => model.toEntity()).toList();
+        return Right(groceries);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));
       }
     } else {
       try {
-        final groceries = await _groceryLocalDataSource.getCachedGroceries();
-        return Right(groceries.map((model) => model.toEntity()).toList());
+        final groceryModels = await _groceryLocalDataSource.getCachedGroceries();
+        final groceries = groceryModels.map((model) => model.toEntity()).toList();
+        return Right(groceries);
       } on CacheException catch (e) {
         return Left(CacheFailure(e.message));
       }
@@ -45,17 +47,17 @@ class GroceryRepositoryImpl extends GroceryRepository {
   Future<Either<Failure, Grocery>> getGroceryDetails(String id) async {
     if (await _networkInfo.isConnected) {
       try {
-        final grocery = await _groceryRemoteDataSource.getGrocery(id);
-        _groceryLocalDataSource.cacheGrocery(grocery);
-        return Right(grocery.toEntity());
+        final groceryModel = await _groceryRemoteDataSource.getGrocery(id);
+        _groceryLocalDataSource.cacheGrocery(groceryModel);
+        return Right(groceryModel.toEntity());
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));
       }
     } else {
       try {
-        final grocery = await _groceryLocalDataSource.getCachedGrocery(id);
-        if (grocery != null) {
-          return Right(grocery.toEntity());
+        final groceryModel = await _groceryLocalDataSource.getCachedGrocery(id);
+        if (groceryModel != null) {
+          return Right(groceryModel.toEntity());
         } else {
           return Left(CacheFailure('Grocery not found in cache'));
         }

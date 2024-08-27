@@ -18,8 +18,17 @@ class GroceryRemoteDataSourceImpl extends GroceryRemoteDataSource {
       final response = await client.get(Uri.parse(_baseUrl));
 
       if (response.statusCode == 200) {
-        final List<dynamic> groceries = jsonDecode(response.body)['data'];
-        return groceries.map((e) => GroceryModel.fromJson(e)).toList();
+        final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+        final List<dynamic> groceries = jsonResponse['data'] ?? [];
+        var groc = <GroceryModel>[];
+
+       
+        for (var e in groceries) {
+          if (e is Map<String, dynamic>) {
+            groc.add(GroceryModel.fromJson(e));
+          }
+        }
+        return groc;
       } else {
         throw ServerException(message: response.body);
       }
@@ -34,7 +43,8 @@ class GroceryRemoteDataSourceImpl extends GroceryRemoteDataSource {
       final response = await client.get(Uri.parse('$_baseUrl/$id'));
 
       if (response.statusCode == 200) {
-        return GroceryModel.fromJson(jsonDecode(response.body)['data']);
+        final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+        return GroceryModel.fromJson(jsonResponse['data']);
       } else {
         throw ServerException(message: response.body);
       }
