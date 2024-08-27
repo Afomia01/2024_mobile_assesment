@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => getIt<HomePageBloc>()..add(FetchAllProductsEvent()), // Updated to use getIt for DI
+          create: (_) => getIt<HomePageBloc>()..add(FetchAllProductsEvent()),
         ),
       ],
       child: MaterialApp(

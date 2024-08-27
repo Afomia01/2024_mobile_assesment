@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:my_app/features/grocery/presentation/Bloc/grocery/grocery_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'features/grocery/data/datasource/local/grocery_local_data_source.dart';
 import 'features/grocery/data/datasource/local/grocery_local_data_source_impl.dart';
@@ -13,11 +12,13 @@ import 'features/grocery/domain/repository/grocery_repository.dart';
 import 'features/grocery/domain/usecases/get_all_groceries.dart';
 import 'features/grocery/domain/usecases/get_grocery_details.dart';
 import 'core/network/network_info.dart';
+import 'features/grocery/presentation/Bloc/grocery/grocery_bloc.dart';
+import 'features/grocery/presentation/Bloc/details/details_bloc.dart';
 
 final getIt = GetIt.instance;
 
 Future<void> setupLocator() async {
-  WidgetsFlutterBinding.ensureInitialized(); 
+  WidgetsFlutterBinding.ensureInitialized();
 
   // External dependencies
   final sharedPreferences = await SharedPreferences.getInstance();
@@ -53,10 +54,16 @@ Future<void> setupLocator() async {
   getIt.registerFactory(() => GetAllGroceries(getIt()));
   getIt.registerFactory(() => GetGroceryDetails(getIt()));
 
-  // Bloc
+  // Blocs
   getIt.registerFactory(
     () => HomePageBloc(
       getAllGroceries: getIt<GetAllGroceries>(),
+    ),
+  );
+
+  getIt.registerFactory(
+    () => DetailsPageBloc(
+      getGroceryDetails: getIt<GetGroceryDetails>(),
     ),
   );
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_app/features/grocery/presentation/pages/grocery_details.dart';
 
 import '../../domain/entity/grocery.dart';
 import '../Bloc/grocery/grocery_bloc.dart';
@@ -42,6 +43,9 @@ class GroceryPage extends StatelessWidget {
                 fillColor: Colors.grey[200],
               ),
             ),
+
+
+            
             SizedBox(height: 16),
             Expanded(
               child: BlocBuilder<HomePageBloc, HomePageState>(
@@ -85,64 +89,76 @@ class GroceryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.white,
-          width: 2,
-        ),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-                child: Image.network(grocery.imageUrl, fit: BoxFit.cover, height: 80, width: double.infinity),
-              ),
-              Positioned(
-                top: 8,
-                right: 8,
-                child: Icon(Icons.favorite, color: Colors.red),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(grocery.title, style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(height: 4),
-                Row(
-                  children: [
-                    Icon(Icons.star, color: Colors.orange, size: 16),
-                    Text(grocery.rating.toString(), style: TextStyle(color: Colors.black)),
-                  ],
-                ),
-                SizedBox(height: 4),
-                if (grocery.isDiscounted)
-                  Row(
-                    children: [
-                      Text(
-                        '£${grocery.price.toStringAsFixed(2)}',
-                        style: TextStyle(decoration: TextDecoration.lineThrough, color: Colors.grey),
-                      ),
-                      SizedBox(width: 8),
-                      Text(
-                        '£${grocery.discountedPrice.toStringAsFixed(2)}',
-                        style: TextStyle(color: Colors.red),
-                      ),
-                    ],
-                  )
-                else
-                  Text('£${grocery.price.toStringAsFixed(2)}', style: TextStyle(color: Colors.orange)),
-              ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductDetailsPage(
+              groceryId: grocery.id,
             ),
           ),
-        ],
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.white,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                  child: Image.network(grocery.imageUrl, fit: BoxFit.cover, height: 80, width: double.infinity),
+                ),
+                Positioned(
+                  top: 8,
+                  right: 8,
+                  child: Icon(Icons.favorite, color: Colors.red),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(grocery.title, style: TextStyle(fontWeight: FontWeight.bold)),
+                  SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Icon(Icons.star, color: Colors.orange, size: 16),
+                      Text(grocery.rating.toString(), style: TextStyle(color: Colors.black)),
+                    ],
+                  ),
+                  SizedBox(height: 4),
+                  if (grocery.isDiscounted)
+                    Row(
+                      children: [
+                        Text(
+                          '£${grocery.price.toStringAsFixed(2)}',
+                          style: TextStyle(decoration: TextDecoration.lineThrough, color: Colors.grey),
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          '£${grocery.discountedPrice.toStringAsFixed(2)}',
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ],
+                    )
+                  else
+                    Text('£${grocery.price.toStringAsFixed(2)}', style: TextStyle(color: Colors.orange)),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
